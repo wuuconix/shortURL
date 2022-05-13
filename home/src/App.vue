@@ -31,8 +31,8 @@ export default {
             user: "",
             pass: "",
             baseURI: baseURI,
-            online: false,
-            avatarSrc: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
+            online: document.cookie != "",
+            avatarSrc: document.cookie != "" ? "https://tva4.sinaimg.cn/large/007YVyKcly1h1w9n5mxr3j30rs0rsabl.jpg" : "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
         }
     },
     methods: {
@@ -43,7 +43,6 @@ export default {
         },
         open_dialog() {
             this.dialogVisible = true
-            this.online = true
         },
         logout() {
             fetch(`${apiURI}/logout`).then(res => res.json()).then(res => {
@@ -66,6 +65,7 @@ export default {
             }).then(res => res.json()).then(res => {
                 console.log(res)
                 if (res.success) {
+                    this.online = true
                     this.avatarSrc = "https://tva4.sinaimg.cn/large/007YVyKcly1h1w9n5mxr3j30rs0rsabl.jpg"
                     this.$message({
                         message: 'wuuconix, welcome back',
@@ -138,5 +138,19 @@ div.card_wrapper {
 .el-avatar {
     margin-left: 5%;
     justify-self: left;
+}
+
+/* 宽屏时登录框为50% */
+@media screen and (orientation:landscape) { 
+    .el-dialog {
+        --el-dialog-width: 500px;
+    }
+}
+
+/* 宽屏时登录框为80% */
+@media screen and (orientation:portrait) { 
+    .el-dialog {
+        --el-dialog-width: 80%;
+    }
 }
 </style>
