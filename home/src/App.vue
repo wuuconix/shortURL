@@ -8,12 +8,11 @@
     <div class="card_wrapper">
         <card v-for="item in shortUrls" :url="this.baseURI + item['dest']" :detail="item['detail']"></card>
     </div>
-    <el-dialog v-model="dialogVisible" title="Authenticate" draggable>
+    <el-dialog v-model="dialogVisible" title="Authenticate" draggable center>
         <el-input v-model="user" placeholder="User" />
         <el-input v-model="pass" placeholder="Pass" />
         <template #footer>
             <span class="dialog-footer">
-                <el-button @click="dialogVisible = false">Cancel</el-button>
                 <el-button type="primary" @click="login">Confirm</el-button>
             </span>
         </template>
@@ -31,8 +30,8 @@ export default {
             user: "",
             pass: "",
             baseURI: baseURI,
-            online: document.cookie != "",
-            avatarSrc: document.cookie != "" ? "https://tva4.sinaimg.cn/large/007YVyKcly1h1w9n5mxr3j30rs0rsabl.jpg" : "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
+            online: false,
+            avatarSrc: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
         }
     },
     methods: {
@@ -87,6 +86,12 @@ export default {
         }
     },
     mounted() {
+        fetch(`${apiURI}/login`).then(res => res.json()).then(res => {
+            if (res.success) {
+                this.online = true
+                this.avatarSrc = "https://tva4.sinaimg.cn/large/007YVyKcly1h1w9n5mxr3j30rs0rsabl.jpg"
+            }
+        })
         this.get_data()
         this.$message({
             message: '欢迎来到武丑兄的短链站',
