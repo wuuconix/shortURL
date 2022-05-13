@@ -68,7 +68,7 @@ router.route("/login")
     })
     .get((req, res) => {
         if (req.session.user) {
-            res.json({success: {msg: "You Have Already Authenticated", user: req.session.user, sessionID: req.sessionID}})
+            res.json({success: {msg: "You Have Already Authenticated", user: req.session.user}})
         } else {
             res.json({error: {msg: "Wrong Method"}})
         }
