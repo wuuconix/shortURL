@@ -107,3 +107,4 @@ home/node_modules
 home/dist
 nodeapi/node_modules
 config/config.js
+config/shorturl.conf
