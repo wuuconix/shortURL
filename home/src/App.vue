@@ -8,7 +8,7 @@
     <div class="card_wrapper">
         <card v-for="item in shortUrls" :url="this.baseURI + item['dest']" :detail="item['detail']"></card>
     </div>
-    <el-dialog v-model="dialogVisible" title="Authenticate" width="30%">
+    <el-dialog v-model="dialogVisible" title="Authenticate" draggable>
         <el-input v-model="user" placeholder="User" />
         <el-input v-model="pass" placeholder="Pass" />
         <template #footer>
