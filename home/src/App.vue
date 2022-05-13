@@ -1,9 +1,12 @@
 <template>
+    <div class="menu">
+        <el-avatar :src="avatarSrc">{{ user }}</el-avatar>
+        <el-button type="primary" plain round @click="open_dialog" v-show="!online">Login</el-button>
+        <el-button type="success" plain round v-show="online">Edit</el-button>
+        <el-button type="danger" plain round @click="logout" v-show="online">Logout</el-button>
+    </div>
     <div class="card_wrapper">
         <card v-for="item in shortUrls" :url="this.baseURI + item['dest']" :detail="item['detail']"></card>
-    </div>
-    <div class="button_wrapper">
-        <el-button type="primary" @click="open_dialog" class="button">Prove you are wuuconix</el-button>
     </div>
     <el-dialog v-model="dialogVisible" title="Authenticate" width="30%">
         <el-input v-model="user" placeholder="User" />
@@ -11,7 +14,7 @@
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="dialogVisible = false">Cancel</el-button>
-                <el-button type="primary" @click="handle_confirm">Confirm</el-button>
+                <el-button type="primary" @click="login">Confirm</el-button>
             </span>
         </template>
     </el-dialog>
@@ -27,7 +30,9 @@ export default {
             dialogVisible: false,
             user: "",
             pass: "",
-            baseURI: baseURI
+            baseURI: baseURI,
+            online: false,
+            avatarSrc: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
         }
     },
     methods: {
@@ -38,14 +43,30 @@ export default {
         },
         open_dialog() {
             this.dialogVisible = true
+            this.online = true
         },
-        handle_confirm() {
+        logout() {
+            fetch(`${apiURI}/logout`).then(res => res.json()).then(res => {
+                if (res.success) {
+                    this.online = false
+                    this.$message({
+                        message: 'Logout Successfully',
+                        type: 'success'
+                    });
+                    this.avatarSrc = "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
+                    this.get_data()
+                }
+            })
+        },
+        login() {
             this.dialogVisible = false
             fetch(`${apiURI}/login`, {
                 method: "POST",
                 body: new URLSearchParams({ user: this.user, pass: this.pass })
             }).then(res => res.json()).then(res => {
+                console.log(res)
                 if (res.success) {
+                    this.avatarSrc = "https://tva4.sinaimg.cn/large/007YVyKcly1h1w9n5mxr3j30rs0rsabl.jpg"
                     this.$message({
                         message: 'wuuconix, welcome back',
                         type: 'success'
@@ -60,6 +81,9 @@ export default {
             }).catch(e => {
                 console.log(e)
             })
+        },
+        handleSelect(key, keyPath) {
+            console.log(key, keyPath)
         }
     },
     mounted() {
@@ -72,19 +96,47 @@ export default {
 }
 </script>
 <style>
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+    width: 100%;
+    height: 100%;
+}
+
 div.card_wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
 }
-div.button_wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 .el-card {
     margin: 10px 10px;
     flex: 30%;
+}
+.menu {
+    width: calc(100% - 20px);
+    padding: 10px 0px;
+    margin: 0px 10px;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--el-color-primary-light-8);
+    display: flex;
+    justify-content: space-between;
+    
+    align-items: center;
+    color: var(--el-menu-text-color);
+}
+
+.el-button {
+    margin-right: 5%;
+}
+
+.el-avatar {
+    margin-left: 5%;
+    justify-self: left;
 }
 </style>

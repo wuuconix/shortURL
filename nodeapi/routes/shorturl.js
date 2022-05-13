@@ -61,7 +61,7 @@ router.route("/login")
             let result = await verify(user, pass)
             if (result) {
                 req.session.user = user
-                return res.json({success: {"msg": "Authenticated Success"}})
+                return res.json({success: {"msg": "Authenticated Success"}, user})
             }
         }
         return res.json({error: {"msg": "Authenticated Failed"}})
@@ -129,5 +129,12 @@ router.route("/update")
     .get((req, res) => {
         res.json({error: {msg: "Method not allowed"}})
     })
+
+router.get("/logout", (req, res) => {
+    req.session.destroy((e) => {
+        res.clearCookie("sessionID")
+        res.json({success: {msg: "Logout Successfully"}})
+    })
+})
 
 module.exports = router
