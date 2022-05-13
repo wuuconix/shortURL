@@ -8,7 +8,8 @@
 ├── LICENSE
 ├── README.md
 ├── config
-│   ├── config.js //配置信息
+│   ├── vue.js //前端配置信息
+│   ├── node.js //后端配置信息
 │   └── shorturl.conf //nginx反代配置文件
 ├── home //vue 短链导航站前端
 └── nodeapi //node 后端api
