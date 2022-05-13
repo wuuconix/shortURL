@@ -4,7 +4,7 @@ const session = require('express-session')
 const shortUrlRouter = require('./routes/shorturl')
 const JumpRouter = require('./routes/jump')
 const mongoose = require('mongoose')
-const config = require("../config/config") //引入你的配置文件
+const config = require("../config/node") //引入你的配置文件
 
 mongoose.connect(config.mongoURI)
 

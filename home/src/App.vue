@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import config from "../../config/config"
+import { baseURI, apiURI } from "../../config/vue"
 
 export default {
     data() {
@@ -27,12 +27,12 @@ export default {
             dialogVisible: false,
             user: "",
             pass: "",
-            baseURI: config.baseURI
+            baseURI: baseURI
         }
     },
     methods: {
         get_data() {
-            fetch(`${config.apiURI}/list`).then(res => res.json()).then(res => {
+            fetch(`${apiURI}/list`).then(res => res.json()).then(res => {
                 this.shortUrls = res.data
             })
         },
@@ -41,7 +41,7 @@ export default {
         },
         handle_confirm() {
             this.dialogVisible = false
-            fetch(`${config.apiURI}/login`, {
+            fetch(`${apiURI}/login`, {
                 method: "POST",
                 body: new URLSearchParams({ user: this.user, pass: this.pass })
             }).then(res => res.json()).then(res => {
