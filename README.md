@@ -19,4 +19,4 @@
 
 在线预览链接: [https://url.wuuconix.link](https://url.wuuconix.link)
 
-![项目截图](https://tva2.sinaimg.cn/large/007YVyKcly1h26qy1elu9j31hc0qpwrp.jpg)
+![项目截图](https://tva2.sinaimg.cn/large/007YVyKcly1h273bjst07j30qy0ez44s.jpg)
