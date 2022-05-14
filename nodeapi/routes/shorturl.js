@@ -31,7 +31,16 @@ const list = async (mode) => {
 
 const update = async (source, dest, detail, type, show) => {
     try {
-        await ShortUrl.updateOne({source}, {$set: {dest, detail, type, show}})
+        await ShortUrl.updateOne({dest}, {$set: {source, detail, type, show}})
+        return true
+    } catch(e) {
+        return false
+    }
+}
+
+const remove = async (dest) => {
+    try {
+        await ShortUrl.deleteOne({dest})
         return true
     } catch(e) {
         return false
@@ -124,6 +133,24 @@ router.route("/update")
             }
         } else {
             return res.json({error: {msg: "Missing Parameter"}})
+        }
+    })
+    .get((req, res) => {
+        res.json({error: {msg: "Method not allowed"}})
+    })
+
+router.route("/remove")
+    .post(async (req, res) => {
+        const { dest } = req.body
+        if (dest !== undefined) {
+            let result = await remove(dest)
+            if (result) {
+                return res.json({success: {msg: "Remove Successfully"}})
+            } else {
+                return res.json({error: {msg: "Remove Failed Due To Internal Error"}})
+            }
+        } else {
+            return res.json({error: {msg: "Missing Required Parameter 'dest'"}})
         }
     })
     .get((req, res) => {
