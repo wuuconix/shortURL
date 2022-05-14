@@ -1,12 +1,21 @@
 <template>
     <div class="menu">
-        <el-avatar :src="avatarSrc">{{ user }}</el-avatar>
+        <el-popover placement="right-start" :width="200" trigger="hover" content="开源啦，来个star吧~">
+                <template #reference>
+                    <a class="github" href="https://github.com/wuuconix/shortURL" target="_blank">
+                        <el-avatar src="https://tvax3.sinaimg.cn/large/007YVyKcly1h27w6nxmvqj305k05kaa3.jpg"></el-avatar>
+                    </a>
+                </template>
+        </el-popover>
+        <el-switch v-model="sourceShow" class="mb-2" active-text="显示源站" inactive-text="不显示源站"/>
         <el-button type="primary" plain round @click="open_dialog" v-show="!online">Login</el-button>
-        <el-button type="success" plain round v-show="online">Edit</el-button>
         <el-button type="danger" plain round @click="logout" v-show="online">Logout</el-button>
     </div>
     <div class="card_wrapper">
-        <card v-for="item in shortUrls" :url="this.baseURI + item['dest']" :detail="item['detail']"></card>
+        <card v-for="item in shortUrls" :dest="item['dest']" :source="item['source']" 
+            :detail="item['detail']" :show="item['show']"  :sourceShow="sourceShow" :online="online" @update="handle_update">
+        </card>
+        <card v-if="online" dest="" source="" detail="" show="1" :sourceShow="sourceShow" :online="online" :newOne="true" @update="handle_update"></card>
     </div>
     <el-dialog v-model="dialogVisible" title="Authenticate" draggable center>
         <el-input v-model="user" placeholder="User" />
@@ -21,6 +30,7 @@
 
 <script>
 import { baseURI, apiURI } from "../../config/vue"
+import card from './components/card.vue'
 
 export default {
     data() {
@@ -31,8 +41,11 @@ export default {
             pass: "",
             baseURI: baseURI,
             online: false,
-            avatarSrc: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
+            sourceShow: false
         }
+    },
+    components: {
+        card
     },
     methods: {
         get_data() {
@@ -65,7 +78,6 @@ export default {
                 console.log(res)
                 if (res.success) {
                     this.online = true
-                    this.avatarSrc = "https://tva4.sinaimg.cn/large/007YVyKcly1h1w9n5mxr3j30rs0rsabl.jpg"
                     this.$message({
                         message: 'wuuconix, welcome back',
                         type: 'success'
@@ -81,21 +93,27 @@ export default {
                 console.log(e)
             })
         },
-        handleSelect(key, keyPath) {
-            console.log(key, keyPath)
+        handle_update(msg) {
+            this.get_data()
+            this.$notify({
+                message: msg,
+                type: 'success',
+                duration: 2000
+            });
         }
     },
     mounted() {
         fetch(`${apiURI}/login`).then(res => res.json()).then(res => {
             if (res.success) {
                 this.online = true
-                this.avatarSrc = "https://tva4.sinaimg.cn/large/007YVyKcly1h1w9n5mxr3j30rs0rsabl.jpg"
+                this.sourceShow = true
             }
         })
         this.get_data()
-        this.$message({
+        this.$notify({
             message: '欢迎来到武丑兄的短链站',
-            type: 'success'
+            type: 'success',
+            duration: 2000
         });
     }
 }
@@ -121,8 +139,7 @@ div.card_wrapper {
     flex: 30%;
 }
 .menu {
-    width: calc(100% - 20px);
-    padding: 10px 0px;
+    padding: 10px 5%;
     margin: 0px 10px;
     overflow: hidden;
     position: sticky;
@@ -131,31 +148,27 @@ div.card_wrapper {
     background-color: var(--el-color-primary-light-8);
     display: flex;
     justify-content: space-between;
-    
     align-items: center;
     color: var(--el-menu-text-color);
 }
 
-.el-button {
-    margin-right: 5%;
-}
-
-.el-avatar {
-    margin-left: 5%;
-    justify-self: left;
-}
-
-/* 宽屏时登录框为50% */
+/* 横屏 */
 @media screen and (orientation:landscape) { 
     .el-dialog {
         --el-dialog-width: 500px;
     }
+    .el-card {
+        flex: 30%;
+    }
 }
 
-/* 宽屏时登录框为80% */
+/* 竖屏 */
 @media screen and (orientation:portrait) { 
     .el-dialog {
         --el-dialog-width: 80%;
+    }
+        .elcard {
+        flex: 45%;
     }
 }
 </style>
