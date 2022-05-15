@@ -19,7 +19,7 @@
     </div>
     <el-dialog v-model="dialogVisible" title="Authenticate" draggable center>
         <el-input v-model="user" placeholder="User" />
-        <el-input v-model="pass" placeholder="Pass" />
+        <el-input v-model="pass" placeholder="Pass" type="password"/>
         <template #footer>
             <span class="dialog-footer">
                 <el-button type="primary" @click="login">Confirm</el-button>
