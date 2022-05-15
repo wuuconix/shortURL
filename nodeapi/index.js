@@ -9,7 +9,7 @@ const config = require("../config/node") //引入你的配置文件
 mongoose.connect(config.mongoURI)
 
 const app = express()
-app.use(session({name: "sessionID", secret: config.sessionSecret, resave: true, saveUninitialized: false, cookie: { httpOnly: true, maxAge: null }}))
+app.use(session({name: "sessionID", secret: config.sessionSecret, resave: true, saveUninitialized: false, cookie: { httpOnly: true, maxAge: null, maxAge: 1000 * 3600 * 24 }}))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use("/shorturl", shortUrlRouter)
 app.use("/jump", JumpRouter)
