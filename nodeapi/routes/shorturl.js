@@ -5,8 +5,10 @@ const {ShortUrl, ShortUrlUser} = require("../schemes/shorturl")
 
 const router = express.Router()
 
-let result = [] //记录从数据库中获取的数据
-let updateFlag = true //每次执行更新操作后需要设置此flag为true
+let resultGuest = [] //记录从数据库中获取的数据
+let resultRoot = []
+let updateGuestFlag = true //每次执行更新操作后需要设置此flag为true
+let updateRootFlag= true //每次执行更新操作后需要设置此flag为true
 
 const insert = async (source, dest, detail, type, show) => {
   try {
@@ -19,20 +21,22 @@ const insert = async (source, dest, detail, type, show) => {
 }
 
 const list = async (mode) => {
-  if (updateFlag) { //需要更新
-    try {
-      if (mode == "root") {
-        result = await ShortUrl.find({}, {_id: 0, __v: 0})
-      } else {
-        result = await ShortUrl.find({show: "1"}, {_id: 0, __v: 0})
+  try {
+    if (mode == "root") {
+      if (updateRootFlag) {
+        resultRoot = await ShortUrl.find({}, {_id: 0, __v: 0})
+        updateRootFlag = false
       }
-      updateFlag = false
-      return result
-    } catch(e) {
-      return false
+      return resultRoot
+    } else {
+      if (updateGuestFlag) {
+        resultGuest = await ShortUrl.find({show: "1"}, {_id: 0, __v: 0})
+        updateGuestFlag = false
+      }
+      return resultGuest
     }
-  } else { //在没有执行任何更新操作的情况下不需要更新
-    return result
+  } catch(e) {
+    return false
   }
 }
 
