@@ -1,6 +1,6 @@
 home/node_modules
 home/dist
 nodeapi/node_modules
-config/vue.js
+config/vue.ts
 config/node.js
 config/shorturl.conf
